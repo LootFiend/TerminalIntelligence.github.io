@@ -3,10 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Intelligence</title>
+    <title>Terminal Intelligence Galaxy</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background: black; }
+        svg { display: block; width: 100vw; height: 100vh; }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Terminal Intelligence</h1>
-    <p>This is the beginning of the mindscape.</p>
+    <svg></svg>
+    <script>
+        const width = window.innerWidth, height = window.innerHeight;
+        const svg = d3.select("svg").attr("width", width).attr("height", height);
+        const g = svg.append("g");
+
+        const nodes = d3.range(50).map(() => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            r: Math.random() * 5 + 2
+        }));
+
+        g.selectAll("circle")
+            .data(nodes)
+            .enter().append("circle")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", d => d.r)
+            .attr("fill", "white")
+            .on("click", function(event, d) {
+                alert("Clicked on a concept!");
+            });
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.5, 5])
+            .on("zoom", (event) => g.attr("transform", event.transform));
+        
+        svg.call(zoom);
+    </script>
 </body>
 </html>
