@@ -6,22 +6,38 @@
     <title>Terminal Intelligence Galaxy</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background: black; }
-        svg { display: block; width: 100vw; height: 100vh; }
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: radial-gradient(circle, rgba(10, 10, 20, 1) 10%, black 100%);
+        }
     </style>
 </head>
 <body>
-    <svg></svg>
     <script>
-        const width = window.innerWidth, height = window.innerHeight;
-        const svg = d3.select("svg").attr("width", width).attr("height", height);
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        const svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
         const g = svg.append("g");
 
-        const nodes = d3.range(50).map(() => ({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            r: Math.random() * 5 + 2
-        }));
+        const numNodes = 50;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const spiralFactor = 10; // Adjust for tighter or looser spirals
+
+        const nodes = d3.range(numNodes).map(i => {
+            const angle = i * 0.3; // Controls the spiral shape
+            return {
+                x: centerX + Math.cos(angle) * i * spiralFactor,
+                y: centerY + Math.sin(angle) * i * spiralFactor,
+                r: Math.random() * 5 + 2
+            };
+        });
 
         g.selectAll("circle")
             .data(nodes)
@@ -30,14 +46,17 @@
             .attr("cy", d => d.y)
             .attr("r", d => d.r)
             .attr("fill", "white")
-            .on("click", function(event, d) {
-                alert("Clicked on a concept!");
-            });
+            .attr("stroke", "rgba(255, 255, 255, 0.5)")
+            .attr("stroke-width", 4)
+            .style("filter", "blur(5px)");
 
+        // Zoom and Pan
         const zoom = d3.zoom()
             .scaleExtent([0.5, 5])
-            .on("zoom", (event) => g.attr("transform", event.transform));
-        
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
         svg.call(zoom);
     </script>
 </body>
