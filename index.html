@@ -70,4 +70,29 @@
             .attr("r", d => d.r)
             .attr("fill", d => d.color)  // Using the color scale for stars
             .attr("opacity", d => d.opacity)
-            .attr("stroke", "rgba(255
+            .attr("stroke", "rgba(255, 255, 255, 0.3)")
+            .attr("stroke-width", 2)
+            .style("filter", d => `blur(${d.blur}px)`);
+
+        // Create nebulae (dust clouds)
+        g.selectAll("circle.dust")
+            .data(dustNodes)
+            .enter().append("circle")
+            .attr("class", "dust")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", d => d.r)
+            .attr("fill", d => d.color)  // Semi-transparent dust color
+            .attr("opacity", d => d.opacity);
+
+        // Zoom and Pan
+        const zoom = d3.zoom()
+            .scaleExtent([0.5, 5])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
+    </script>
+</body>
+</html>
